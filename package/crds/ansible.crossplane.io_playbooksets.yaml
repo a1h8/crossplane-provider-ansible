@@ -53,6 +53,9 @@ spec:
                 description: PlaybookSetParameters are the configurable fields of
                   a PlaybookSet.
                 properties:
+                  conf:
+                    description: Configuration parameter to execute playbook
+                    type: object
                   module:
                     description: The configuration of this PlaybookSet; i.e. the configuration
                       containing its playbook files. When the playbookSet's Provider
@@ -68,6 +71,7 @@ spec:
                     - Inline
                     type: string
                 required:
+                - conf
                 - module
                 - source
                 type: object

@@ -24,13 +24,34 @@ import (
 
 // A ConfigurationSource represents the source of a PlaybookSet Configuration.
 // +kubebuilder:validation:Enum=Remote;Inline
+// A ConfigurationSource represents the source of a PlaybookSet Configuration.
+// +kubebuilder:validation:Enum=Remote;Inline
 type ConfigurationSource string
+
+// ConfigurationPlaybook object to define python dependenciees and ansible dependencies
+//+kubebuilder:validation:Type=object
+type ConfigurationPlaybook struct {
+	PythonRequiement   string `json:",inline"`
+	AnsibleRequirement string `json:",inline"`
+}
 
 // Module sources.
 const (
 	ConfigurationSourceRemote ConfigurationSource = "Remote"
 	ConfigurationSourceInline ConfigurationSource = "Inline"
 )
+
+// PlaybookSetObservation are the observable fields of a PlaybookSet.
+type PlaybookSetObservation struct {
+	// TODO(negz): Should we include outputs here? Or only in connection
+	// details.
+}
+
+// A PlaybookSetSpec defines the desired state of a PlaybookSet.
+type PlaybookSetSpec struct {
+	xpv1.ResourceSpec `json:",inline"`
+	ForProvider       PlaybookSetParameters `json:"forProvider"`
+}
 
 // PlaybookSetParameters are the configurable fields of a PlaybookSet.
 type PlaybookSetParameters struct {
@@ -44,18 +65,11 @@ type PlaybookSetParameters struct {
 
 	// Source of configuration of this playbookSet.
 	Source ConfigurationSource `json:"source"`
-}
 
-// PlaybookSetObservation are the observable fields of a PlaybookSet.
-type PlaybookSetObservation struct {
-	// TODO(negz): Should we include outputs here? Or only in connection
-	// details.
-}
-
-// A PlaybookSetSpec defines the desired state of a PlaybookSet.
-type PlaybookSetSpec struct {
-	xpv1.ResourceSpec `json:",inline"`
-	ForProvider       PlaybookSetParameters `json:"forProvider"`
+	// Configuration parameter to execute playbook
+	//+kubebuilder:validation:Type=object
+	//+kubebuilder:validation:Schemaless
+	Conf ConfigurationPlaybook `json:"conf"`
 }
 
 // A PlaybookSetStatus represents the observed state of a PlaybookSet.
